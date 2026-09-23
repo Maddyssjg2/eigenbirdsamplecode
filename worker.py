@@ -4,10 +4,9 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .mock_connector import MockKanbanConnector
-from .models import Card, CardState, ToolCall
-from .tool_registry import ToolRegistry
-
+from mock_connector import MockKanbanConnector
+from models import Card, CardState, ToolCall
+from tool_registry import ToolRegistry
 
 Planner = Callable[[Card], list[ToolCall]]
 
