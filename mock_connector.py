@@ -1,7 +1,7 @@
 """In-memory stand-in for a board service. No network or credentials."""
 from __future__ import annotations
 
-from .models import Card, CardState
+from models import Card, CardState
 
 
 class MockKanbanConnector:
