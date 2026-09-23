@@ -1,6 +1,7 @@
-from kanban_sample import Card, KanbanWorker, ToolCall
-from kanban_sample.mock_connector import MockKanbanConnector
-from kanban_sample.tool_registry import ToolRegistry
+from mock_connector import MockKanbanConnector
+from models import Card, ToolCall
+from tool_registry import ToolRegistry
+from worker import KanbanWorker
 
 
 def main() -> None:
