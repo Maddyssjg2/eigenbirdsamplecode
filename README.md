@@ -12,11 +12,11 @@ It is **not** a copy of, or guide to, full Eigenbird product flow. No production
 
 ## What to read
 
-1. [`kanban_sample/worker.py`](kanban_sample/worker.py) — deterministic card lifecycle: `todo -> in_progress -> done | blocked`.
-2. [`kanban_sample/tool_registry.py`](kanban_sample/tool_registry.py) — explicit tool allow-list and required-argument guard.
-3. [`kanban_sample/mock_connector.py`](kanban_sample/mock_connector.py) — in-memory board adapter, zero network calls.
+1. [`worker.py`](worker.py) — deterministic card lifecycle: `todo -> in_progress -> done | blocked`.
+2. [`tool_registry.py`](tool_registry.py) — explicit tool allow-list and required-argument guard.
+3. [`mock_connector.py`](mock_connector.py) — in-memory board adapter, zero network calls.
 4. [`demo.py`](demo.py) — one-card happy-path demo.
-5. [`tests/test_worker.py`](tests/test_worker.py) — completion, block, empty-board, and argument-validation behavior.
+5. [`test_worker.py`](test_worker.py) — completion, block, empty-board, and argument-validation behavior.
 
 ## Run
 
@@ -24,7 +24,7 @@ Requires Python 3.11+. No install or environment variables needed.
 
 ```bash
 python demo.py
-python -m unittest discover -s tests -v
+python -m unittest -v test_worker
 ```
 
 Expected demo shape:
@@ -43,7 +43,7 @@ Expected demo shape:
 | Connector | Card lookup; state updates; transition log | Business actions |
 | Demo planner | Explicit `ToolCall` list | Model use, background loop, hidden side effects |
 
-Keeping these roles separate makes failure behavior visible and unit-testable. A tool error becomes a `blocked` card with the error text; it cannot leave a card in `in_progress`.
+Keeping these roles separate makes failure behavior visible and unit-testable. A tool error becomes a `blocked` card with error text; it cannot leave card in `in_progress`.
 
 ## Security and sharing posture
 
@@ -52,4 +52,4 @@ Keeping these roles separate makes failure behavior visible and unit-testable. A
 - Tool dispatch is allow-listed: unknown tools and missing required inputs fail closed.
 - Repo intentionally contains synthetic card IDs and demo text only.
 
-Before sharing, run the tests above and inspect `git status --ignored` to ensure no local files are staged. This sample is MIT-licensed.
+This sample is MIT-licensed.
