@@ -1,8 +1,9 @@
 import unittest
 
-from kanban_sample import Card, CardState, KanbanWorker, ToolCall
-from kanban_sample.mock_connector import MockKanbanConnector
-from kanban_sample.tool_registry import ToolError, ToolRegistry
+from mock_connector import MockKanbanConnector
+from models import Card, CardState, ToolCall
+from tool_registry import ToolError, ToolRegistry
+from worker import KanbanWorker
 
 
 class WorkerTests(unittest.TestCase):
