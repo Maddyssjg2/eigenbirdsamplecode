@@ -1,55 +1,48 @@
-# Eigenbird sample: kanban worker + tool registry
+# Eigenbird Kanban Worker Sample
 
-Small, dependency-free Python sample. Reviewer can read core in a few minutes.
-
-It shows one narrow design:
+Small Python example for processing a kanban card through an allow-listed set of tools. It runs with the Python standard library only.
 
 ```text
-mock board -> worker state machine -> allow-listed tools -> mock board
+mock board -> kanban worker -> tool registry -> mock board
 ```
 
-It is **not** a copy of, or guide to, full Eigenbird product flow. No production connectors, credentials, prompts, routing, persistence, API endpoints, or deployment configuration included.
+## Files
 
-## What to read
-
-1. [`worker.py`](worker.py) — deterministic card lifecycle: `todo -> in_progress -> done | blocked`.
-2. [`tool_registry.py`](tool_registry.py) — explicit tool allow-list and required-argument guard.
-3. [`mock_connector.py`](mock_connector.py) — in-memory board adapter, zero network calls.
-4. [`demo.py`](demo.py) — one-card happy-path demo.
-5. [`test_worker.py`](test_worker.py) — completion, block, empty-board, and argument-validation behavior.
+- [`worker.py`](worker.py) moves one card through `todo`, `in_progress`, `done`, or `blocked`.
+- [`tool_registry.py`](tool_registry.py) registers named tools and validates required arguments.
+- [`mock_connector.py`](mock_connector.py) provides an in-memory board with no network access.
+- [`demo.py`](demo.py) runs one card from start to finish.
+- [`test_worker.py`](test_worker.py) covers normal completion, blocked cards, empty boards, and missing arguments.
 
 ## Run
 
-Requires Python 3.11+. No install or environment variables needed.
+Python 3.11 or newer is required. No installation or environment variables are needed.
 
 ```bash
 python demo.py
 python -m unittest -v test_worker
 ```
 
-Expected demo shape:
+Example output:
 
 ```text
 {'card_id': 'card-1', 'state': 'done', 'tool_results': [{'saved': 'Demo completed'}]}
-{'card_state': 'done', 'notes': ['Demo completed'], 'transitions': [('card-1', <CardState.IN_PROGRESS: 'in_progress'>), ('card-1', <CardState.DONE: 'done'>)]}
+{'card_state': 'done', 'notes': ['Demo completed']}
 ```
 
-## Why these boundaries
+## Card flow
 
-| Part | Owns | Does not own |
-| --- | --- | --- |
-| Worker | One-card lifecycle; success/failure settling | Network access; tool policy |
-| Registry | Tool allow-list; required input checks; dispatch | Picking cards; state transitions |
-| Connector | Card lookup; state updates; transition log | Business actions |
-| Demo planner | Explicit `ToolCall` list | Model use, background loop, hidden side effects |
+| Component | Responsibility |
+| --- | --- |
+| Worker | Picks one todo card and settles its final state |
+| Registry | Allows registered tools and validates inputs |
+| Connector | Stores cards and transition history in memory |
+| Demo | Supplies one explicit tool call |
 
-Keeping these roles separate makes failure behavior visible and unit-testable. A tool error becomes a `blocked` card with error text; it cannot leave card in `in_progress`.
+Tool errors set the card state to `blocked` and include the error message.
 
-## Security and sharing posture
+## Scope
 
-- Uses Python standard library only; mock connector never opens network connections.
-- `.env` and `.env.*` ignored. No environment values read.
-- Tool dispatch is allow-listed: unknown tools and missing required inputs fail closed.
-- Repo intentionally contains synthetic card IDs and demo text only.
+This repository uses synthetic data only. It does not include production connectors, credentials, prompts, routing, persistence, API endpoints, or deployment configuration.
 
-This sample is MIT-licensed.
+MIT licensed.
